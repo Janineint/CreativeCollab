@@ -1,0 +1,8 @@
+C:\Users\shank\source\repos\CreativeCollab\obj\Debug\net9.0\CreativeCollab.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\shank\source\repos\CreativeCollab\obj\Debug\net9.0\CreativeCollab.AssemblyInfoInputs.cache
+C:\Users\shank\source\repos\CreativeCollab\obj\Debug\net9.0\CreativeCollab.AssemblyInfo.cs
+C:\Users\shank\source\repos\CreativeCollab\obj\Debug\net9.0\CreativeCollab.csproj.CoreCompileInputs.cache
+C:\Users\shank\source\repos\CreativeCollab\obj\Debug\net9.0\CreativeCollab.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\shank\source\repos\CreativeCollab\obj\Debug\net9.0\CreativeCollab.RazorAssemblyInfo.cache
+C:\Users\shank\source\repos\CreativeCollab\obj\Debug\net9.0\CreativeCollab.RazorAssemblyInfo.cs
+C:\Users\shank\source\repos\CreativeCollab\obj\Debug\net9.0\CreativeCollab.sourcelink.json
