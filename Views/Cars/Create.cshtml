@@ -1,0 +1,73 @@
+﻿@* Define the model the view expects - your Car class *@
+@model CreativeCollab.Models.Car
+
+@{
+    ViewData["Title"] = "Create New Car";
+    // Assumes ViewBag.UserId contains a SelectList of Users: new SelectList(context.Users, "Id", "Name")
+}
+
+<h1>Create New Car</h1>
+
+<h4>Enter Car Details</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        @* The form will POST to the "Create" action in the CarsController *@
+        <form asp-action="Create">
+            @* Displays model-level validation errors *@
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Make" class="control-label"></label>
+                <input asp-for="Make" class="form-control" />
+                <span asp-validation-for="Make" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Model" class="control-label"></label>
+                <input asp-for="Model" class="form-control" />
+                <span asp-validation-for="Model" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Year" class="control-label"></label>
+                <input asp-for="Year" class="form-control" />
+                <span asp-validation-for="Year" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="UserID" class="control-label">Owner</label>
+                @* Requires ViewBag.UserId to be populated with a SelectList in the Controller's Create GET action *@
+                <select asp-for="UserID" class="form-control" asp-items="ViewBag.UserId">
+                    <option value="">-- Select Owner --</option>
+                </select>
+                <span asp-validation-for="UserID" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ImageURL" class="control-label">Image URL</label>
+                <input asp-for="ImageURL" class="form-control" />
+                <span asp-validation-for="ImageURL" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Review" class="control-label"></label>
+                <textarea asp-for="Review" class="form-control"></textarea>
+                <span asp-validation-for="Review" class="text-danger"></span>
+            </div>
+
+            @* Note: Category selection (many-to-many) is omitted here for simplicity.
+                It typically requires separate handling after creation or more complex UI. *@
+
+            <div class="form-group mt-4">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                | <a asp-action="Index">Back to List</a> @* Link back to the car list *@
+            </div>
+        </form>
+    </div>
+</div>
+
+@* Include validation scripts for client-side validation *@
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

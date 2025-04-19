@@ -1,0 +1,109 @@
+﻿@* Define the model the view expects - your Car class *@
+@model CreativeCollab.Models.Car
+
+@{
+    ViewData["Title"] = "Car Details";
+}
+
+<h1>Car Details</h1>
+
+<div>
+    <h4>Car Information</h4>
+    <hr />
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.ImageURL)
+    </dt>
+    <dd class="col-sm-10">
+        @if (!string.IsNullOrEmpty(Model.ImageURL))
+            {
+        @* Display image using the URL. Added onerror for fallback. *@
+        <img src="@Model.ImageURL"
+             alt="Car Image for @Model.Make @Model.Model"
+             style="max-width: 200px; max-height: 200px; object-fit: cover; border: 1px solid #ccc;"
+             onerror="this.onerror=null; this.src='https://placehold.co/200x200/eeeeee/aaaaaa?text=Image+Not+Found';" />
+            }
+            else
+            {
+        @* Display a placeholder if no URL is provided *@
+        <img src="https://placehold.co/200x200/eeeeee/aaaaaa?text=No+Image"
+             alt="No Car Image Available"
+             style="max-width: 200px; max-height: 200px; border: 1px solid #ccc;" />
+            }
+    </dd>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CarId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CarId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Make)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Make)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Model)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Model)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Year)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Year)
+        </dd>
+        <dt class="col-sm-2">
+            Owner
+        </dt>
+        <dd class="col-sm-10">
+            @* Display owner's name using the navigation property. Assumes User model has a Name property. *@
+            @(Model.User != null ? Html.DisplayFor(model => model.User.Name) : "N/A")
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ImageURL)
+        </dt>
+        <dd class="col-sm-10">
+            @if (!string.IsNullOrEmpty(Model.ImageURL))
+            {
+            <img src="@Model.ImageURL" alt="Car Image" style="max-width: 200px; max-height: 200px;" />
+            }
+            else
+            {
+            <span>No Image</span>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Review)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Review)
+        </dd>
+        <dt class="col-sm-2">
+            Categories
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.CarCategories != null && Model.CarCategories.Any())
+            {
+            <ul>
+                @* Loop through the join table entries to get category names *@
+                @* Assumes CarCategory has a Category navigation property, which has a Name property *@
+                @foreach (var carCategory in Model.CarCategories)
+                    {
+                <li>@carCategory.Category?.CategoryName</li>
+                    }
+            </ul>
+            }
+            else
+            {
+            <span>No Categories Assigned</span>
+            }
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.CarId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

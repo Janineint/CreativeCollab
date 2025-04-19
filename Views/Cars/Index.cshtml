@@ -1,0 +1,57 @@
+﻿@using CreativeCollab.ViewModels
+@model CarListViewModel
+
+@{
+var cars = (IEnumerable<dynamic>)ViewData["Cars"];    
+ViewData["Title"] = "Car List";
+}
+
+<div class="w-100 py-5" style="background-color: #FBFBFD;">
+    <div class="container" style="max-width: 1000px;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold text-center flex-grow-1 text-dark">Car List</h2>
+            <a class="btn btn-primary ms-3" asp-action="Create">+ Add New Car</a>
+        </div>
+
+        <table class="table table-hover table-striped rounded">
+            <thead class="text-center">
+                <tr>
+                    <th class="text-white bg-primary">ID</th>
+                    <th class="text-white bg-primary">Make</th>
+                    <th class="text-white bg-primary">Model</th>
+                    <th class="text-white bg-primary">Year</th>
+                    <th class="text-white bg-primary">Owner</th>
+                    <th class="text-white bg-primary">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Cars != null)
+                 {
+                    foreach (var item in Model.Cars) // Loop through the Cars collection in the ViewModel
+                        {
+                        <tr class="align-middle text-center">
+                            <td>@item.CarId</td>
+                            <td>@item.Make</td>
+                            <td>@item.Model</td>
+                            <td>@item.Year</td>
+                            <td>
+                                @(item.User != null ? item.User.Name : "N/A")
+                            </td>
+                            <td>
+                                <a class="btn btn-info text-white btn-sm me-1" asp-action="Details" asp-route-id="@item.CarId">View</a>
+                                <a class="btn btn-warning text-dark btn-sm me-1" asp-action="Edit" asp-route-id="@item.CarId">Edit</a>
+                                <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.CarId">Delete</a>
+                            </td>
+                        </tr>
+                       
+                        }
+                     }
+                 else
+                 {
+                <tr class="text-center"><td colspan="6">No cars found.</td></tr>
+                 }
+
+            </tbody>
+        </table>
+    </div>
+</div>

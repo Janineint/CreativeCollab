@@ -1,0 +1,98 @@
+﻿@* Define the model the view expects - your Car class *@
+@* Note: For handling checkboxes, a ViewModel is often preferred *@
+@model CreativeCollab.Models.Car
+
+@{
+    ViewData["Title"] = "Edit Car";
+    // Assumes ViewBag.UserId contains a SelectList of Users: new SelectList(context.Users, "Id", "Name", Model.UserID)
+    // Assumes ViewBag.AllCategories contains a list of objects with CategoryId and Name properties for checkboxes
+    // Assumes ViewBag.AssignedCategories contains a HashSet<int> of Category IDs currently assigned to this car
+}
+
+<h1>Edit Car</h1>
+
+<h4>Car Information</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        @* This form POSTs to the Edit action in CarsController *@
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @* Important: Include the Id as a hidden field *@
+            <input type="hidden" asp-for="CarId" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Make" class="control-label"></label>
+                <input asp-for="Make" class="form-control" />
+                <span asp-validation-for="Make" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Model" class="control-label"></label>
+                <input asp-for="Model" class="form-control" />
+                <span asp-validation-for="Model" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Year" class="control-label"></label>
+                <input asp-for="Year" class="form-control" />
+                <span asp-validation-for="Year" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="UserID" class="control-label">Owner</label>
+                @* Requires ViewBag.UserId to be populated with a SelectList in the Controller's Edit GET action *@
+                <select asp-for="UserID" class="form-control" asp-items="ViewBag.UserId"></select>
+                <span asp-validation-for="UserID" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="ImageURL" class="control-label">Image URL</label>
+                <input asp-for="ImageURL" class="form-control" />
+                <span asp-validation-for="ImageURL" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Review" class="control-label"></label>
+                <textarea asp-for="Review" class="form-control"></textarea>
+                <span asp-validation-for="Review" class="text-danger"></span>
+            </div>
+
+            @* Handling Many-to-Many Categories with Checkboxes *@
+            <div class="form-group mb-3">
+                <label class="control-label">Categories</label>
+                <div class="border p-2">
+                    @if (ViewBag.AllCategories != null)
+                    {
+                        var allCategories = ViewBag.AllCategories as List<CreativeCollab.Models.Category>; // Cast based on what you pass
+                        var assignedCategories = ViewBag.AssignedCategories as HashSet<int>; // Cast based on what you pass
+
+                        if (allCategories != null && assignedCategories != null)
+                        {
+                             foreach (var category in allCategories)
+                             {
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="selectedCategoryIds" @* Name must match parameter in POST action *@
+                               value="@category.CategoryID"
+                               @(assignedCategories.Contains(category.CategoryID) ? "checked=\"checked\"" : "") />
+                        <label class="form-check-label">
+                            @category.CategoryName
+                        </label>
+                    </div>
+                             }
+                        }
+                        else { <text>Category data not available.</text> }
+                    }
+                    else { <text>Category data not available.</text> }
+                </div>
+            </div>
+
+            <div class="form-group mt-4">
+                <input type="submit" value="Save Changes" class="btn btn-primary" />
+                | <a asp-action="Index">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
