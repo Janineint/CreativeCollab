@@ -1,0 +1,156 @@
+﻿@* Use the new ViewModel to access Order, User, and Car *@
+@model CreativeCollab.ViewModels.OrderDetailsViewModel
+
+@{
+    ViewData["Title"] = $"Order Details - #{Model.Order?.TransactionId}";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <h4>Order Information</h4>
+    <hr />
+    @if (Model.Order != null)
+    {
+    <dl class="row">
+        <dt class="col-sm-2">
+            Order ID
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Order.TransactionId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Order.OrderDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Order.OrderDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Order.Store)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Order.Store.StoreName) @* Assumes Store has StoreName *@
+        </dd>
+        <dt class="col-sm-2">
+            Total Cost
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Order.TotalCost) @* Format as currency if needed *@
+        </dd>
+    </dl>
+    }
+    else
+    {
+    <p class="text-danger">Order data not found.</p>
+    }
+
+    <h4 class="mt-4">Associated User</h4>
+    <hr />
+    @if (Model.AssociatedUser != null)
+    {
+    <dl class="row">
+        <dt class="col-sm-2">
+            User Name
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AssociatedUser.Name)
+        </dd>
+        <dt class="col-sm-2">
+            User Email
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AssociatedUser.Email)
+        </dd>
+    </dl>
+    }
+    else
+    {
+    <p>No user associated with this order vehicle link.</p>
+    }
+
+    <h4 class="mt-4">Associated Car</h4>
+    <hr />
+    @if (Model.AssociatedCar != null)
+    {
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AssociatedCar.Make)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AssociatedCar.Make)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AssociatedCar.Model)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AssociatedCar.Model)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AssociatedCar.Year)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AssociatedCar.Year)
+        </dd>
+        <dt class="col-sm-2">
+            Car Image
+        </dt>
+        <dd class="col-sm-10">
+            @if (!string.IsNullOrEmpty(Model.AssociatedCar.ImageURL))
+                 {
+            <img src="@Model.AssociatedCar.ImageURL"
+                 alt="Car Image for @Model.AssociatedCar.Make @Model.AssociatedCar.Model"
+                 style="max-width: 150px; max-height: 150px; object-fit: cover; border: 1px solid #ccc;"
+                 onerror="this.onerror=null; this.src='https://placehold.co/150x150/eeeeee/aaaaaa?text=Image+Not+Found';" />
+                 }
+                 else
+                 {
+            <img src="https://placehold.co/150x150/eeeeee/aaaaaa?text=No+Image"
+                 alt="No Car Image Available"
+                 style="max-width: 150px; max-height: 150px; border: 1px solid #ccc;" />
+                 }
+        </dd>
+    </dl>
+    }
+    else
+    {
+    <p>No car associated with this order vehicle link.</p>
+    }
+
+    <h4 class="mt-4">Order Items</h4>
+    <hr />
+    @if (Model.Order?.OrderDetails != null && Model.Order.OrderDetails.Any())
+    {
+    <table class="table table-sm table-bordered">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Order.OrderDetails)
+                {
+            <tr>
+                <td>@item.Product?.ProductName</td> @* Assumes Product navigation property exists and has ProductName *@
+                <td>@item.Quantity</td>
+                <td>@item.UnitPrice.ToString("C")</td> @* Format as currency *@
+                <td>@((item.Quantity * item.UnitPrice).ToString("C"))</td> @* Format as currency *@
+            </tr>
+                }
+        </tbody>
+    </table>
+    }
+    else
+    {
+    <p>No items found for this order.</p>
+    }
+
+</div>
+<div class="mt-4">
+    @* Link back to Edit action if needed, using OrderId from the ViewModel *@
+    @* <a asp-action="Edit" asp-route-id="@Model.Order?.TransactionId">Edit</a> | *@
+    <a asp-action="Index">Back to List</a>
+</div>
+

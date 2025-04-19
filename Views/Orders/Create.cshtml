@@ -1,0 +1,199 @@
+﻿@* Use the ViewModel which includes SelectedUserId and SelectedCarId *@
+@using CreativeCollab.ViewModels
+@model OrderCreateViewModel
+
+@{
+    // Products list for the dynamic items section
+    var products = (IEnumerable<dynamic>)ViewData["Products"] ?? new List<dynamic>();
+    ViewData["Title"] = "Add New Order";
+
+    // Assumes ViewBag.StoreID contains a SelectList of Stores
+    // Assumes ViewBag.UserId contains a SelectList of Users
+    // ** ViewBag.CarId is NOT expected here anymore **
+}
+
+<div class="container my-5" style="max-width: 600px;">
+    <h2 class="text-center fw-bold mb-4">@ViewData["Title"]</h2>
+
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        @* --- Store Selection --- *@
+        <div class="mb-3">
+            <label class="form-label">Store</label>
+            <select asp-for="StoreID" asp-items="@(ViewBag.StoreID as SelectList)" class="form-select">
+                <option value="">-- Select Store --</option>
+            </select>
+            <span asp-validation-for="StoreID" class="text-danger"></span>
+        </div>
+
+        @* --- Order Date --- *@
+        <div class="mb-3">
+            <label asp-for="OrderDate" class="form-label">Order Date</label>
+            <input asp-for="OrderDate" class="form-control" type="date" />
+            <span asp-validation-for="OrderDate" class="text-danger"></span>
+        </div>
+
+        @* --- User (Owner) Selection --- *@
+        <div class="form-group mb-3">
+            <label asp-for="SelectedUserId" class="control-label"></label>
+            @* Populate this dropdown from ViewBag.UserId as before *@
+            <select asp-for="SelectedUserId" id="userDropdown" class="form-select" asp-items="ViewBag.UserId">
+                <option value="">-- Select Owner/User --</option>
+            </select>
+            <span asp-validation-for="SelectedUserId" class="text-danger"></span>
+        </div>
+
+        @* --- Car Selection (Initially Empty) --- *@
+        <div class="form-group mb-3">
+            <label asp-for="SelectedCarId" class="control-label"></label>
+            @* This dropdown will be populated by JavaScript. Remove asp-items *@
+            <select asp-for="SelectedCarId" id="carDropdown" class="form-select">
+                <option value="" disabled selected>-- Select Owner First --</option> @* Initial disabled option *@
+            </select>
+            <span asp-validation-for="SelectedCarId" class="text-danger"></span>
+        </div>
+
+        @* --- Dynamic Order Items Section (Keep existing logic) --- *@
+        <h5 class="fw-bold mt-4">Order Items</h5>
+        <div id="itemsContainer">
+            @* Render existing items passed from the model (if any) *@
+            @if (Model.Items != null)
+            {
+                for (int i = 0; i < Model.Items.Count; i++)
+                {
+            <div class="border p-3 rounded mb-3 item-row">
+                <div class="mb-2">
+                    <label>Menu Item</label>
+                    @Html.DropDownList($"Items[{i}].ProductId", new SelectList(products, "ProductId", "Display", Model.Items[i].ProductId), "-- Select Menu Item --", new { @class = "form-select" })
+                    @Html.ValidationMessage($"Items[{i}].ProductId", "", new { @class = "text-danger" })
+                </div>
+                <div>
+                    <label>Quantity</label>
+                    @Html.TextBox($"Items[{i}].Quantity", Model.Items[i].Quantity, new { @class = "form-control", type = "number", min="1" })
+                    @Html.ValidationMessage($"Items[{i}].Quantity", "", new { @class = "text-danger" })
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="removeItem(this)">Remove Item</button>
+            </div>
+                }
+            }
+        </div>
+
+        <button type="button" class="btn btn-outline-dark mb-3" onclick="addItem()">+ Add Another Item</button>
+
+        @* --- Form Submission Buttons --- *@
+        <div class="text-end mt-4">
+            <a asp-action="Index" class="btn btn-secondary me-2">Cancel</a>
+            <button type="submit" class="btn btn-primary">Place Order</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        // --- JavaScript for Dynamic Car Dropdown ---
+        $(document).ready(function () {
+            // Get references to the dropdowns
+            const userSelect = $('#userDropdown'); // Added ID "userDropdown" to user select tag
+            const carSelect = $('#carDropdown');   // Added ID "carDropdown" to car select tag
+
+            // Event listener for when the user selection changes
+            userSelect.on('change', function () {
+                const selectedUserId = $(this).val(); // Get the selected UserID
+
+                // Clear existing car options (except the first default one)
+                carSelect.find('option:not(:first)').remove();
+                carSelect.val(''); // Reset selection
+                carSelect.find('option:first').text('-- Loading Cars --').prop('disabled', true); // Update default text
+
+                if (selectedUserId && selectedUserId !== "") {
+                    // Make AJAX call to the controller action
+                    $.ajax({
+                        url: '@Url.Action("GetCarsByOwner", "Orders")', // URL to the controller action
+                        type: 'GET',
+                        data: { userId: selectedUserId }, // Pass the selected userId as data
+                        success: function (cars) {
+                            // Check if any cars were returned
+                            if (cars && cars.length > 0) {
+                                carSelect.find('option:first').text('-- Select Car --').prop('disabled', false); // Enable default option
+                                // Populate the car dropdown with new options
+                                $.each(cars, function (index, car) {
+                                    // Use car.value and car.text based on what the controller returns
+                                    carSelect.append($('<option>', {
+                                        value: car.value,
+                                        text: car.text
+                                    }));
+                                });
+                            } else {
+                                // No cars found for this user
+                                carSelect.find('option:first').text('-- No Cars Found --').prop('disabled', true);
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.error("Error fetching cars: ", textStatus, errorThrown);
+                            carSelect.find('option:first').text('-- Error Loading Cars --').prop('disabled', true);
+                            // Optionally display an error message to the user
+                        }
+                    });
+                } else {
+                    // No user selected, reset car dropdown
+                     carSelect.find('option:first').text('-- Select Owner First --').prop('disabled', true);
+                }
+            });
+
+            // Trigger change on page load if a user is already selected
+            // (e.g., when returning view with validation errors)
+            if (userSelect.val()) {
+                 userSelect.trigger('change');
+            }
+        });
+
+        // --- Keep your existing JavaScript for adding/removing items ---
+        let itemIndex = @(Model.Items?.Count ?? 0);
+        const products = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(products.Select(p => new { ProductId = p.ProductId, Display = p.Display }).ToList()));
+
+        function addItem() {
+            // ... (your existing addItem function code) ...
+             const container = document.getElementById("itemsContainer");
+            const div = document.createElement("div");
+            div.classList.add("border", "p-3", "rounded", "mb-3", "item-row"); // Added class 'item-row'
+
+            let options = '<option value="">-- Select Menu Item --</option>';
+            if (products && products.length > 0) {
+                 for (const p of products) {
+                     options += `<option value="${p.ProductId}">${p.Display || 'Unnamed Product'}</option>`;
+                 }
+            } else {
+                 console.warn("Products data for dropdown is empty or not loaded correctly.");
+            }
+
+            div.innerHTML = `
+                <div class="mb-2">
+                    <label>Menu Item</label>
+                    <select name="Items[${itemIndex}].ProductId" class="form-select" required>
+                        ${options}
+                    </select>
+                </div>
+                <div>
+                    <label>Quantity</label>
+                    <input name="Items[${itemIndex}].Quantity" class="form-control" type="number" value="1" min="1" required />
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="removeItem(this)">Remove Item</button>`;
+
+            container.appendChild(div);
+            itemIndex++;
+        }
+
+        function removeItem(button) {
+             const itemRow = button.closest('.item-row');
+             if (itemRow) {
+                 itemRow.remove();
+             }
+        }
+         document.addEventListener('DOMContentLoaded', (event) => {
+            itemIndex = document.querySelectorAll('#itemsContainer .item-row').length;
+        });
+    </script>
+}

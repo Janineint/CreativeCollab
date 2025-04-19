@@ -1,0 +1,23 @@
+﻿@model Product
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<div class="container" style="background-color: #FBFBFD; max-width: 800px;">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="text-center mb-4 fw-bold">Product Details</h2>
+
+            <div class="mb-3"><strong>Product Name:</strong> @Model.ProductName</div>
+            <div class="mb-3"><strong>Price:</strong> $ @Model.UnitPrice.ToString("N2")</div>
+            <div class="mb-3"><strong>Size:</strong> @Model.UnitSize</div>
+            <div class="mb-3"><strong>Category:</strong> @Model.Category</div>
+            <div class="mb-3"><strong>Supplier:</strong> @Model.Supplier?.Name</div>
+
+            <div class="text-end">
+                <a asp-action="Edit" asp-route-id="@Model.ProductId" class="btn btn-warning text-dark me-2">Edit</a>
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
