@@ -2,7 +2,22 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- Full-width container -->
+<div class="w-100 py-5" style="background-color: #FBFBFD;">
+    <div class="container text-center">
+        <div class="mb-5">
+            <div class="shadow p-4 rounded bg-white mx-auto" style="max-width: 800px;">
+                <h1 class="display-5 fw-bold"> Inventory Management System</h1>
+                <p class="lead text-muted">
+                    Manage stores, orders, and menu items seamlessly with our easy-to-use system.
+                </p>
+            </div>
+
+            <div class="mt-4">
+                <a class="btn btn-primary me-2" asp-controller="Users" asp-action="Index">Manage Drivers</a>
+                <a class="btn btn-info text-white me-2" asp-controller="Orders" asp-action="Index">View Orders</a>
+                <a class="btn btn-warning text-white" asp-controller="Cars" asp-action="Index">View Vehicles</a>
+            </div>
+        </div>
+    </div>
 </div>

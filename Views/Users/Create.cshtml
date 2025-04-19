@@ -1,0 +1,56 @@
+﻿@* Define the model the view expects - your User class *@
+@model CreativeCollab.Models.User
+
+@{
+    ViewData["Title"] = "Create User";
+}
+
+<h1>Create New User</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        @* The form will POST to the "Create" action in the UsersController *@
+        <form asp-action="Create">
+            @* Displays model-level validation errors (e.g., "User already exists") *@
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group mb-3">
+                @* Label for the Name property *@
+                <label asp-for="Name" class="control-label"></label>
+                @* Input field for the Name property *@
+                <input asp-for="Name" class="form-control" />
+                @* Displays validation errors specifically for the Name property *@
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                @* Label for the Email property *@
+                <label asp-for="Email" class="control-label"></label>
+                @* Input field for the Email property *@
+                <input asp-for="Email" class="form-control" />
+                @* Displays validation errors specifically for the Email property *@
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            @* Add other fields here if your User model has more properties you want to set on creation *@
+            @* Example:
+                <div class="form-group mb-3">
+                    <label asp-for="SomeOtherProperty" class="control-label"></label>
+                    <input asp-for="SomeOtherProperty" class="form-control" />
+                    <span asp-validation-for="SomeOtherProperty" class="text-danger"></span>
+                </div>
+            *@
+
+            <div class="form-group mt-4">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                | <a asp-action="Index">Back to List</a> @* Link back to the user list *@
+            </div>
+        </form>
+    </div>
+</div>
+
+@* Include validation scripts for client-side validation *@
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

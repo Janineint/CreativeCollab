@@ -1,0 +1,37 @@
+﻿@model Store
+@{
+    ViewData["Title"] = "Store Details";
+}
+
+<div class="container" style="background-color: #FBFBFD; max-width: 800px;">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="text-center mb-4 fw-bold">Store Details</h2>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Full Name</label>
+                <p class="form-control-plaintext">@Model.StoreName</p>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Email</label>
+                <p class="form-control-plaintext">@Model.Email</p>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Phone</label>
+                <p class="form-control-plaintext">@Model.Phone</p>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Address</label>
+                <p class="form-control-plaintext">@Model.Address</p>
+            </div>
+
+            <div class="text-end">
+                <a asp-action="Edit" asp-route-id="@Model.StoreID" class="btn btn-warning text-dark me-2">Edit</a>
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
