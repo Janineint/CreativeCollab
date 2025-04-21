@@ -14,6 +14,8 @@ namespace CreativeCollab.Models
 
         public int? StoreID { get; set; }
 
+        public int? CarID { get; set; }
+
         public decimal TotalCost { get; set; }
 
         public ApplicationUser User { get; set; }
