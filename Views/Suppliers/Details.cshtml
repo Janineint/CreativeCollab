@@ -1,0 +1,28 @@
+﻿@model Supplier
+@{
+    ViewData["Title"] = "Supplier Details";
+}
+
+<div class="container" style="background-color: #FBFBFD; max-width: 800px;">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="text-center mb-4 fw-bold">Supplier Details</h2>
+
+            @foreach (var prop in typeof(Supplier).GetProperties())
+            {
+                if (prop.Name != "Products" && prop.Name != "Orders")
+                {
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">@prop.Name</label>
+                        <p class="form-control-plaintext">@prop.GetValue(Model)</p>
+                    </div>
+                }
+            }
+
+            <div class="text-end">
+                <a asp-action="Edit" asp-route-id="@Model.SupplierId" class="btn btn-warning text-dark me-2">Edit</a>
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>

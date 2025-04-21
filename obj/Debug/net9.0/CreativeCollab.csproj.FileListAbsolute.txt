@@ -304,10 +304,10 @@ C:\Users\janvi\Downloads\gitjan\CreativeCollab\obj\Debug\net9.0\staticwebassets\
 C:\Users\janvi\Downloads\gitjan\CreativeCollab\obj\Debug\net9.0\staticwebassets\msbuild.buildMultiTargeting.CreativeCollab.props
 C:\Users\janvi\Downloads\gitjan\CreativeCollab\obj\Debug\net9.0\staticwebassets\msbuild.buildTransitive.CreativeCollab.props
 C:\Users\janvi\Downloads\gitjan\CreativeCollab\obj\Debug\net9.0\staticwebassets.pack.json
-C:\Users\janvi\Downloads\gitjan\CreativeCollab\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 C:\Users\janvi\Downloads\gitjan\CreativeCollab\obj\Debug\net9.0\Creative.BAD3C02F.Up2Date
 C:\Users\janvi\Downloads\gitjan\CreativeCollab\obj\Debug\net9.0\CreativeCollab.dll
 C:\Users\janvi\Downloads\gitjan\CreativeCollab\obj\Debug\net9.0\refint\CreativeCollab.dll
 C:\Users\janvi\Downloads\gitjan\CreativeCollab\obj\Debug\net9.0\CreativeCollab.pdb
 C:\Users\janvi\Downloads\gitjan\CreativeCollab\obj\Debug\net9.0\CreativeCollab.genruntimeconfig.cache
 C:\Users\janvi\Downloads\gitjan\CreativeCollab\obj\Debug\net9.0\ref\CreativeCollab.dll
+C:\Users\janvi\Downloads\gitjan\CreativeCollab\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
