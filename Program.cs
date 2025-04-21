@@ -1,3 +1,4 @@
+using CreativeCollab.Data;
 using CreativeCollab.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,19 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 var app = builder.Build();
+
+try
+{
+    // Call the initializer method
+    await DataSeeder.InitializeDatabaseAsync(app);
+}
+catch (Exception ex)
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occurred during database initialization on startup.");
+    // Optional: Decide if the application should stop if seeding fails.
+    // return; // Stop the application
+}
 
 
 // Configure the HTTP request pipeline.
